@@ -1,0 +1,25 @@
+---
+- hosts: '{{ hostgroup }}'
+  become: yes
+
+
+  tasks:
+  - name: Install dependencies
+    apt:
+      name: default-jdk
+      state: present
+      update_cache: yes
+
+  - name: Add the jenkins key to the system
+    shell: wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+    become: true
+
+  - name: Install jenkins
+    apt:
+      deb: https://pkg.jenkins.io/debian-stable/binary/jenkins_2.150.3_all.deb
+   
+
+  - name: Start jenkins service
+    systemd:
+      name: jenkins
+      state: started   

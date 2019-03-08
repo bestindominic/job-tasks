@@ -1,0 +1,17 @@
+FROM ubuntu:16.04
+
+WORKDIR /phpapp
+
+RUN apt-get update
+
+RUN apt-get install -y git && apt-get install -y nginx && apt-get install -y php-fpm && apt-get install -y php-mysql 
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
+
+
+## This is for securing mysql
+#RUN mysql_secure_installation
+
+
+RUN git clone https://github.com/bestindominic/testphp.git
+

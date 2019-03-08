@@ -1,0 +1,51 @@
+---
+- hosts: '{{ hostgroup }}'
+  become: yes
+
+  tasks:
+
+  - name: Install dependencies
+    apt:
+      name: default-jdk
+      state: present
+      update_cache: yes
+
+  - name: Create a directory for tomcat
+    file:
+      path: /opt/apache-tomcat
+      owner: ubuntu
+      group: ubuntu
+      mode: 0755
+      state: directory
+
+  - name: Download tomcat on to the server
+    get_url: 
+      url: http://archive.apache.org/dist/tomcat/tomcat-9/v9.0.8/bin/apache-tomcat-9.0.8.tar.gz
+      dest: /tmp
+
+  - name: Extract the downloaded tomcat
+    unarchive:
+      src: /tmp/apache-tomcat-9.0.8.tar.gz
+      dest: /opt/apache-tomcat
+      mode: 0755
+      remote_src: yes
+
+  - name: Set permissions for tomcat
+    shell: sudo chown -R ubuntu:ubuntu /opt/apache-tomcat && chmod 744 /opt/apache-tomcat
+
+  - name: Setup tomcat to run as service
+    copy:
+      src: tomcat.service
+      dest: /etc/systemd/system/tomcat.service
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: Reload and start tomcat service
+    shell: sudo systemctl daemon-reload && sudo systemctl start tomcat.service
+
+  - name: Show tomcat service status
+    shell: sudo systemctl status tomcat
+
+
+

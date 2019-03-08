@@ -1,0 +1,17 @@
+master1 ansible_host=52.203.237.56  ansible_user=ubuntu
+master2 ansible_host=54.172.103.16  ansible_user=ubuntu
+tserver1 ansible_host=3.1.85.28  ansible_user=ubuntu
+jserver1 ansible_host=52.203.237.56  ansible_user=ubuntu
+
+[vpc-setup]
+vpc
+
+[mysql-server]
+master1 server_id=1
+master2 server_id=2
+
+[tomcat-server]
+tserver1
+
+[jenkins-server]
+jserver1
