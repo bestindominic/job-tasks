@@ -1,4 +1,6 @@
 ---
+#### Master1 and Master2 details required below can be obtained while running the mysql setup playbbok  #####
+
 - hosts: '{{ hostgroup }}'
   become: yes
   vars:
