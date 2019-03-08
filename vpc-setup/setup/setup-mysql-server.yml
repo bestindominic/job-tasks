@@ -1,0 +1,62 @@
+---
+- hosts: '{{ hostgroup }}'
+  become: yes
+  vars:
+  - mysql_root_pass: "admin"
+  vars_prompt:
+  - name: "hostgroup"
+    prompt: "Enter the hostgroup"
+    private: false
+    default: testhost
+
+  tasks:
+
+  - name: Install the python-mysqldb module before other tasks
+    apt: name=python-mysqldb state=latest update_cache=yes
+
+  - name: Set MySQL root password before installing
+    debconf: name='mysql-server' question='mysql-server/root_password' value='{{mysql_root_pass | quote}}' vtype='password'
+
+  - name: Confirm MySQL root password before installing
+    debconf: name='mysql-server' question='mysql-server/root_password_again' value='{{mysql_root_pass | quote}}' vtype='password'
+
+  - name: install mysql-common mysql-client mysql-server
+    apt: name={{ item }} state=latest update_cache=yes
+    with_items:
+    - mysql-common
+    - mysql-client
+    - mysql-server
+
+  - name: stop mysql service
+    service: name=mysql state=stopped
+
+  - name: copy mysqld.cnf jinja template
+    template: src=mysqld.cnf.j2 dest=/etc/mysql/mysql.conf.d/mysqld.cnf owner=root group=root mode=644 {{ server_id }}
+    when: inventory_hostname == "mysql1"
+
+  - name: copy mysqld.cnf jinja template
+    template: src=mysqld.cnf.j2 dest=/etc/mysql/mysql.conf.d/mysqld.cnf owner=root group=root mode=644  {{ server_id }}
+    when: inventory_hostname == "mysql2"
+
+  - name: start mysql service
+    service: name=mysql state=started
+
+  - name: check mysql1 status
+    mysql_replication:
+       login_user: root
+       login_password: admin
+       mode: getmaster
+    when: inventory_hostname == "mysql1"
+    register: replica_status_master_one
+
+  - debug: msg="{{ replica_status_master_one }}"
+
+  - name: check mysql2 status
+    mysql_replication:
+       login_user: root
+       login_password: admin
+       mode: getmaster
+    when: inventory_hostname == "mysql1"
+    register: replica_status_master_two
+
+  - debug: msg="{{ replica_status_master_two }}"
