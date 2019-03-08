@@ -104,7 +104,10 @@ long_query_time = 10
 # ssl-key=/etc/mysql/server-key.pem
 
 server-id               = {{ server_id }}
-log_bin                 = /var/log/mysql/mysql-bin.log
-binlog_do_db            = example
+log-bin="mysql-bin"
+binlog_do_db            = test
+replicate-do-db         = test
+relay-log="mysql-relay-log"
+auto-increment-offset = {{ auto_incr }}
 # bind-address            = 127.0.0.1
 
