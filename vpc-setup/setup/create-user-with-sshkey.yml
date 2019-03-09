@@ -1,7 +1,7 @@
 ---
+#########  command to run -> ansible-playbook -vi ../inventory/host -e "hostgroup=tserver" create-user-with-sshkey.yml  ##############
 - hosts: "{{ hostgroup }}"
   become: yes
-
 
   tasks:
   - name: Add user

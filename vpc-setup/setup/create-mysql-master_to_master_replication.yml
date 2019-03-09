@@ -1,4 +1,5 @@
 ---
+#########  command to run -> ansible-playbook -vi ../inventory/host -e "hostgroup=mysql-server" create-mysql-master_to_master_replication.yml ##############
 #### Master1 and Master2 details required below can be obtained while running the mysql setup playbbok  #####
 
 - hosts: '{{ hostgroup }}'

@@ -1,4 +1,5 @@
 ---
+#########  command to run -> ansible-playbook -vi ../inventory/host -e "hostgroup=jserver" setup-jenkins.yml ############## 
 - hosts: '{{ hostgroup }}'
   become: yes
 

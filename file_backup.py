@@ -57,7 +57,7 @@ def Zip(output_filename):
     zipf.close()
 
 
-# sftp creds sftp sammyfiles@54.172.103.16   :   sftptestpass
+# sftp creds sftp sftpuser@3.1.20.214   :   sftptestpass
 
 def upload_and_delete(sftp, output_filename):
     print("************  Starting sftp upload and delete ************")
@@ -91,6 +91,6 @@ if __name__ == '__main__':
 
     Zip(output_filename)
 
-    sftp = pysftp.Connection('54.172.103.16', username='sammyfiles', password='sftptestpass')
+    sftp = pysftp.Connection('3.1.20.214', username='sftpuser', password='sftpuser')
     upload_and_delete(sftp, output_filename)
     delete_files(rm_files_list)
